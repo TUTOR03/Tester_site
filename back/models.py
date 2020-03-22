@@ -10,22 +10,19 @@ class Test(models.Model):
 	slug = models.SlugField(allow_unicode = True, null = True, blank = True)
 	def __str__(self):
 		return(f'{self.test_name}')
+
 class Question(models.Model):
 	question_text = models.TextField(max_length = 250, null = False, blank = False)
 	question_answer = models.TextField(max_length = 100, null = False, blank = False)
 	test_model = models.ForeignKey(Test, on_delete = models.CASCADE, null = False, blank = False)
 	def __str__(self):
-		return(f'{self.test_model.test_name}-{self.question_text}')
+		return(f'{self.test_model.test_name} - {self.question_text}')
+
 class Answer(models.Model):
 	answer_text = models.TextField(max_length = 100, null = False, blank = False)
-	question_model = models.ForeignKey(Question, on_delete = models.CASCADE)
+	question_model = models.ForeignKey(Question, on_delete = models.CASCADE, related_name = 'answers')
 	def __str__(self):
-		return(f'{self.question_model.question_text}-{self.answer_text}')
-class Account(models.Model):
-	birth_date = models.DateField(auto_now = False, null = True, blank = True)
-	user = models.OneToOneField(User, on_delete = models.CASCADE)
-	def __str__(self):
-		return(f'{self.user.username}-{self.user.first_name}-{self.user.last_name}-{self.birth_date}')
+		return(f'{self.question_model.question_text} - {self.answer_text}')
 
 class Test_result(models.Model):
 	completed = models.BooleanField()
@@ -33,8 +30,15 @@ class Test_result(models.Model):
 	test = models.ForeignKey(Test, on_delete = models.CASCADE)
 	user = models.ForeignKey(User, on_delete = models.CASCADE)
 	def __str__(self):
-		return(f'{self.user.first_name}-{self.user.last_name}-{self.test.test_name}-{self.result}%')
+		return(f'{self.user.first_name} - {self.user.last_name} - {self.test.test_name} - {self.result}%')
 
+class Test_timer(models.Model):
+	start_time = models.TimeField(auto_now = True)
+	duration = models.DecimalField(max_digits = 5, decimal_places = 0)
+	user = models.ForeignKey(User, on_delete = models.CASCADE)
+	test = models.ForeignKey(Test, on_delete = models.CASCADE)
+	def __str__(self):
+		return(f'{self.user.username} - {self.test.test_name} - {self.start_time}')
 
 @receiver(pre_save, sender = Test)
 def add_slug(sender, instance, **kwargs):
@@ -44,5 +48,4 @@ def add_slug(sender, instance, **kwargs):
 @receiver(post_save, sender = User)
 def create_user_account(sender,instance,created,**kwargs):
 	if created:
-		ob = Account(user = instance)
-		ob.save()
+		Token.objects.create(user = instance)
