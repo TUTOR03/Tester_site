@@ -1,0 +1,157 @@
+html,body{
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
+.navbar-brand{
+	font-size: 2rem;
+}
+.nav-item{
+	font-size: 1.35rem;
+}
+#LoginFormCol,#RegisterFormCol{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	padding: 0!important;
+}
+#LoginFormCol .row, #RegisterFormCol .row{
+	min-width: 100%;
+	align-items: center;
+	justify-content: center;
+}
+#LoginFormCol form .form-group, #RegisterFormCol form .form-group{
+	text-align: center;
+	font-size: 1.35rem;
+}
+
+#LoginFormCol .row .FormShadow, #RegisterFormCol .row .FormShadow{
+	box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+	padding: 2.75rem 1.5rem;
+}
+.navbar-nav{
+	width: 100%;
+}
+/*.navbar{
+	min-height: 5.5rem;
+}*/
+.navbar-nav .nav-item{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.AccountInfo{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-radius: 1rem;
+}
+.AccountImg {
+	display: inline-block;
+	background-image: url('Microsoft_Account.svg.png');
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+	width: 4rem;
+	height: 4rem;
+}
+.AccountName{
+	font-size: 1.35rem;
+	color: rgba(0,0,0,.5);
+}
+.dropdown-item{
+	color: rgba(0,0,0,.5);
+}
+.dropdown-item:hover{
+	color: rgba(0,0,0,.5) !important;
+}
+.AccountInfo::after{
+	color: rgba(0,0,0,.5);
+}
+.AccountItem{
+	margin-left: auto;
+}
+.TestCard{
+	height: 100%;
+}
+.TestCard .card-header{
+	font-size: 1.5rem;
+}
+.TestResult{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.TestResult .card-title{
+	display: inline-block;
+	margin-bottom:0 !important;
+	font-size: 3rem;
+}
+.TestCard .card-title span{
+	font-size: 2rem !important;
+}
+.TestCard .card-header{
+	font-weight: bold;
+}
+.TestCard a{
+	text-decoration: none;
+	color: rgba(0,0,0,.5);
+}
+.TestStatus{
+	width: 1.5rem;
+	height: 1.5rem;
+	background-color: red;
+	border-radius: 50%;
+	display: inline-block;
+}
+.TestActive{
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 1rem;
+	height: 1rem;
+	background-color: rgba(0,0,0,.5);
+	border-radius: 50%;
+}
+.TestSingle{
+	box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+	padding: 0.75rem 1.5rem;
+	border: 1px solid rgba(0,0,0,.1)
+}
+.TestDuration{
+	text-align: right;
+}
+.SingleAnswer .list-group-item{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-size: 1.25rem;
+}
+.SingleAnswer .card-header{
+	font-size: 1.5rem;
+}
+.SingleAnswer .custom-checkbox{
+	padding: 0 !important;
+}
+.SingleAnswer .custom-control-label::before,
+.SingleAnswer .custom-control-label::after{
+	bottom: 0;
+	top:0;
+	min-height: 1.25rem;
+	min-width: 1.25rem;
+}
+@media screen and (max-width: 767px) {
+	.AccountItem{
+		margin-left: 0;
+	}
+	.navbar-nav .nav-item{
+		justify-content: flex-start;
+	}
+	.AccountInfo{
+		padding-left: 0 !important;
+	}
+	.TestDuration{
+		text-align: left;
+	}	
+}

@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from rest_framework import generics,permissions, status
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.authtoken.models import Token
 from .models import Test, Question, Answer, Test_result, Test_timer
-from .serializers import TestListSerializer, UserRegisterSerializer, QuestionSerializer, TestSingleTimerSerializer
+from .serializers import TestListSerializer, UserRegisterSerializer, QuestionSerializer, TestTimerSerializer, CreateTestTimerSerializer
 from rest_framework.authtoken.views import ObtainAuthToken
 
 #TEST ACTIONS
@@ -27,11 +27,32 @@ def TestSingleAPIview(request,slug):
 
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
-def TestSingleTimerAPIview(request,slug):
-	data = Test_timer.objects.get(test = Test.objects.get(slug = slug), user = request.user)
-	serializer = TestSingleTimerSerializer(data)
-	print(serializer)
-	return Response(serializer.data, status = status.HTTP_200_OK)
+def TestTimerAPIview(request):
+	try:
+		data = Test_timer.objects.filter(user=request.user)
+		serializer = TestTimerSerializer(data, many=True)
+		return Response(serializer.data, status = status.HTTP_200_OK)
+	except:
+		return Response([], status = status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def CreateTestTimerAPIview(request):
+	data = request.data
+	data['user'] = request.user.id
+	serializer = CreateTestTimerSerializer(data = data)
+	if serializer.is_valid():
+		serializer.save()
+		return Response(status = status.HTTP_201_CREATED)
+	else:
+		return Response(serializer.errors,status = status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def GetTestResultAPIview(request):
+	timer = Test_timer.objects.get(user = request.user, test = request.data['user']['test_id']).delete()
+	print('-'*35,request.data)
+	return Response(status = status.HTTP_200_OK)
 
 #USER ACTIONS
 @api_view(['POST'])
@@ -63,7 +84,7 @@ class UserAuthToken(ObtainAuthToken):
 		token, created = Token.objects.get_or_create(user=user)
 		return Response({
 			'token': token.key,
-			'username': user.username,
+			'user_id' : user.id,
 			'first_name': user.first_name,
 			'last_name': user.last_name, 
 		})	

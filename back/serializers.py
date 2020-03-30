@@ -2,12 +2,23 @@ from rest_framework import serializers
 from .models import Test, Test_result, Question, Answer, Test_timer
 from django.contrib.auth.models import User
 
-class TestSingleTimerSerializer(serializers.ModelSerializer):
+class TestTimerSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Test_timer
 		fields = [
 			'start_time',
 			'duration',
+			'test',
+			'id'
+		]
+
+class CreateTestTimerSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Test_timer
+		fields = [
+			'duration',
+			'user',
+			'test'
 		]
 
 class TestListSerializer(serializers.ModelSerializer):
@@ -20,7 +31,10 @@ class TestListSerializer(serializers.ModelSerializer):
 			'test_description',
 			'slug',
 			'result',
-			'completed'
+			'completed',
+			'active',
+			'duration',
+			'id'
 		]
 	def get_result(self,instance):
 		try:
@@ -40,11 +54,11 @@ class QuestionSerializer(serializers.ModelSerializer):
 		depth = 2
 		fields = [
 			'question_text',
-			'test_model',
+			'id',
 			'answers',
 		]
 	def get_answers(self,instance):
-		return list(map(lambda ob: ob.answer_text,list(Answer.objects.filter(question_model = instance))))
+		return list(map(lambda ob: [ob.answer_text,str(ob.id)],list(Answer.objects.filter(question_model = instance))))
 
 class UserRegisterSerializer(serializers.ModelSerializer):
 	class Meta:

@@ -8,5 +8,7 @@ urlpatterns=[
 	path('login',views.UserAuthToken.as_view(),name = 'UserLogin'),
 	path('logout', views.UserLogoutAPIview, name = 'UserLogout'),
 	path('tests/<slug>',views.TestSingleAPIview, name = 'TestSingle'),
-	path('tests/<slug>/timer',views.TestSingleTimerAPIview, name = 'TestSingleTimer'),
+	path('timer',views.TestTimerAPIview, name = 'TestTimer'),
+	path('test_result', views.GetTestResultAPIview, name = 'GetTestResult'),
+	path('timer/create', views.CreateTestTimerAPIview, name = 'CreateTestTimer')
 ]
