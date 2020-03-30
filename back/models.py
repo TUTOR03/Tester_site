@@ -20,7 +20,6 @@ class Test(models.Model):
 
 class Question(models.Model):
 	question_text = models.TextField(max_length = 250, null = False, blank = False)
-	question_answer = models.TextField(max_length = 100, null = False, blank = False)
 	test_model = models.ForeignKey(Test, on_delete = models.CASCADE, null = False, blank = False)
 	def __str__(self):
 		return(f'{self.test_model.test_name} - {self.question_text}')
@@ -31,11 +30,17 @@ class Answer(models.Model):
 	def __str__(self):
 		return(f'{self.question_model.question_text} - {self.answer_text}')
 
+class RightAnswer(models.Model):
+	question = models.ForeignKey(Question, on_delete = models.CASCADE, null = False, blank = False)
+	answer = models.ForeignKey(Answer, on_delete = models.CASCADE, null = False, blank = False)
+	def __str__(self):
+		return(f'{self.question} - {self.answer}')
+
 class Test_result(models.Model):
 	completed = models.BooleanField()
-	result = models.DecimalField(max_digits = 3, decimal_places = 0)
-	test = models.ForeignKey(Test, on_delete = models.CASCADE)
-	user = models.ForeignKey(User, on_delete = models.CASCADE)
+	result = models.DecimalField(max_digits = 5, decimal_places = 2, null = False, blank = False)
+	test = models.ForeignKey(Test, on_delete = models.CASCADE, null = False, blank = False)
+	user = models.ForeignKey(User, on_delete = models.CASCADE, null = False, blank = False)
 	def __str__(self):
 		return(f'{self.user.first_name} - {self.user.last_name} - {self.test.test_name} - {self.result}%')
 

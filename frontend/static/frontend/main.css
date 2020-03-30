@@ -88,6 +88,12 @@ html,body{
 	margin-bottom:0 !important;
 	font-size: 3rem;
 }
+.TestResultSingle{
+	justify-content: flex-end;
+}
+.TestResultSingle .card-title{
+	font-size:1.5rem;
+}
 .TestCard .card-title span{
 	font-size: 2rem !important;
 }
@@ -97,6 +103,10 @@ html,body{
 .TestCard a{
 	text-decoration: none;
 	color: rgba(0,0,0,.5);
+}
+.TestResultSingle .TestStatus{
+	width: 1rem;
+	height: 1rem;
 }
 .TestStatus{
 	width: 1.5rem;

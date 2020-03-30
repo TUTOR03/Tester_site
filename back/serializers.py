@@ -24,6 +24,7 @@ class CreateTestTimerSerializer(serializers.ModelSerializer):
 class TestListSerializer(serializers.ModelSerializer):
 	result = serializers.SerializerMethodField()
 	completed = serializers.SerializerMethodField()
+	in_progress = serializers.SerializerMethodField()
 	class Meta:
 		model = Test
 		fields = [
@@ -34,8 +35,16 @@ class TestListSerializer(serializers.ModelSerializer):
 			'completed',
 			'active',
 			'duration',
-			'id'
+			'id',
+			'in_progress'
 		]
+	def get_in_progress(self,instance):
+		try:
+			ob = Test_timer.objects.get(user = self.context['user'], test = instance)
+			return True
+		except:
+			return False
+
 	def get_result(self,instance):
 		try:
 			return Test_result.objects.get(user = self.context['user'], test = instance).result

@@ -12,7 +12,7 @@ class MainPage extends Component{
 		this.SetTimers = this.SetTimers.bind(this)
 		this.SendAnswers = this.SendAnswers.bind(this)
 		}
-	GetTimers(callb){
+	GetTimers(...callb){
 		if(localStorage.token){
 			if(localStorage.timers){
 				JSON.parse(localStorage.timers).forEach((ob)=>{
@@ -39,7 +39,7 @@ class MainPage extends Component{
 						this.CreateAnswerStorage()
 						this.SetTimers()
 						if(callb !== undefined){
-							callb()
+							callb.forEach((ob)=>{ob()})
 						}
 					})
 				}
@@ -70,6 +70,9 @@ class MainPage extends Component{
 			if(response.ok){
 				localStorage.removeItem(`timeout_${test_id}`)
 				localStorage.removeItem(`test_${test_id}_answers`)
+				let data = JSON.parse(localStorage.timers)
+				data.splice(data.indexOf(data.find((ob)=>ob.test==test_id)),1)
+				localStorage.setItem('timers',JSON.stringify(data))
 			}
 		})
 		.catch(error => console.log('ERROR',error))
