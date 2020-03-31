@@ -106,6 +106,9 @@ class TestFull extends Component{
 				let interval = setInterval(()=>{
 				let time = this.state.timer_time
 				if(time-1 >= 0){
+					if(this.timer_time){
+						this.setState({timer_time:time-1})
+					}
 					this.setState({timer_time:time-1})
 				}
 				else{
@@ -144,6 +147,10 @@ class TestFull extends Component{
 			})
 			.catch(error => console.log('ERROR',error))	
 		}
+	}
+	componentWillUnmount(){
+		clearInterval(parseInt(localStorage.getItem(`timer_time_id_${this.state.test_info.id}`)))
+		localStorage.removeItem(`timer_time_id_${this.state.test_info.id}`)
 	}
 	componentDidMount(){
 		this.GetSingleTest()
