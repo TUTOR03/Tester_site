@@ -22,6 +22,7 @@ class Navbar extends Component{
 				localStorage.removeItem('username')
 				localStorage.removeItem('first_name')
 				localStorage.removeItem('last_name')
+				localStorage.removeItem('user_id')
 				this.props.UpdateToken()
 			}
 		})
@@ -39,6 +40,10 @@ class Navbar extends Component{
   						<ul className='navbar-nav'>
   							<li className="nav-item">
   								<Link to='/site/main' className='nav-link'>Тесты</Link>
+      						</li>
+      						
+      						<li className="nav-item">
+  								<Link to='/site/main/constructor' className='nav-link'>Добавить</Link>
       						</li>
       						<li className='nav-item AccountItem dropdown'>
       							{this.props.isAuth ?

@@ -84,6 +84,7 @@ def UserRegisterAPIview(request):
 		data['username'] = user.username
 		data['first_name'] = user.first_name
 		data['last_name'] = user.last_name
+		data['is_admin'] = user.is_superuser
 		data['token'] = Token.objects.get(user = user).key
 		return Response(data,status = status.HTTP_201_CREATED)
 	else:
@@ -105,5 +106,6 @@ class UserAuthToken(ObtainAuthToken):
 			'token': token.key,
 			'user_id' : user.id,
 			'first_name': user.first_name,
-			'last_name': user.last_name, 
+			'last_name': user.last_name,
+			'is_admin': user.is_superuser 
 		})	

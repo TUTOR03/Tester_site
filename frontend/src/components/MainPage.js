@@ -3,6 +3,7 @@ import {Route, BrowserRouter, Switch} from 'react-router-dom'
 import Navbar from './Navbar'
 import TestList from './TestList'
 import TestFull from './TestFull'
+import TestConstructor from './TestConstructor'
 
 class MainPage extends Component{
 	constructor(props){
@@ -105,6 +106,7 @@ class MainPage extends Component{
 						{this.props.isAuth ? 
 							<Switch>
 								<Route exact path='/site/main' render={()=><TestList isAuth={this.props.isAuth} UpdateToken={this.props.UpdateToken}/>}/>
+								<Route exact path='/site/main/constructor' render={()=><TestConstructor isAuth={this.props.isAuth}/>}/>
 								<Route exact path='/site/main/:slug' render={ ({match})=><TestFull GetTimers={this.GetTimers} match={match}/> }/>
 							</Switch>	
 							:

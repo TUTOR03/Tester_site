@@ -40,6 +40,7 @@ class RegisterPage extends Component{
 						localStorage.setItem('user_id',responeData.user_id)
 						localStorage.setItem('first_name',responeData.first_name)
 						localStorage.setItem('last_name',responeData.last_name)
+						localStorage.setItem('is_admin',responeData.is_admin)
 						this.props.UpdateToken()
 					})
 					.catch(error => console.log('ERROR',error))
