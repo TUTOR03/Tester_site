@@ -41,10 +41,13 @@ class Navbar extends Component{
   							<li className="nav-item">
   								<Link to='/site/main' className='nav-link'>Тесты</Link>
       						</li>
-      						
+      						{this.props.isAuth && localStorage.is_admin == 'true' ? 
       						<li className="nav-item">
   								<Link to='/site/main/constructor' className='nav-link'>Добавить</Link>
       						</li>
+      						:
+      						''
+      						}
       						<li className='nav-item AccountItem dropdown'>
       							{this.props.isAuth ?
       							<div className='Account'>

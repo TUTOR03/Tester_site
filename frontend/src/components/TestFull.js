@@ -10,6 +10,7 @@ class TestFull extends Component{
 		this.SetCheck = this.SetCheck.bind(this)
 		this.StartTest = this.StartTest.bind(this)
 		this.SetTimer = this.SetTimer.bind(this)
+		this.GetExelPage = this.GetExelPage.bind(this)
 		this.state = {
 			questions: [],
 			test_info: {},
@@ -38,6 +39,9 @@ class TestFull extends Component{
 	}
 	SendAnswersHand(event){
 		event.preventDefault()
+		let data_change = JSON.parse(localStorage.getItem(`test_${this.state.test_info.id}_answers`))
+		data_change.user.time_long = (parseInt(this.state.test_info.duration)-this.state.timer_time/60).toFixed(2)
+		localStorage.setItem(`test_${this.state.test_info.id}_answers`,JSON.stringify(data_change))
 		const endpoint = `/api/test_result`
 			let options = {
 					method: 'POST',
@@ -148,6 +152,32 @@ class TestFull extends Component{
 			.catch(error => console.log('ERROR',error))	
 		}
 	}
+	GetExelPage(event){
+		event.preventDefault()
+		const endpoint = `/api/results/${this.state.test_info.id}`
+			let options = {
+					method: 'GET',
+					headers: {
+						'Content-type':'application/json',
+						'Authorization': `Token ${localStorage.token}`
+					},
+				}
+		fetch(endpoint, options)
+		.then(response => {
+			if(response.ok){
+				response.blob()
+				.then(blob =>{
+				const url = window.URL.createObjectURL(new Blob([blob]))
+				const link = document.createElement('a')
+				link.href = url
+				link.setAttribute('download',`${this.state.test_info.test_name} results.xls`)
+				document.body.appendChild(link)
+				link.click()
+				link.parentNode.removeChild(link)
+				})
+			}
+		})
+	}
 	componentWillUnmount(){
 		clearInterval(parseInt(localStorage.getItem(`timer_time_id_${this.state.test_info.id}`)))
 		localStorage.removeItem(`timer_time_id_${this.state.test_info.id}`)
@@ -175,6 +205,11 @@ class TestFull extends Component{
 				<div className='row'>
 					<div className='col-sm-12 col-md-8 mb-3'>
 						<h3 className='TestTitle'>{this.state.test_info.test_name}</h3>
+						{localStorage.is_admin == 'true' ? 
+						<button onClick={this.GetExelPage} className='btn btn-outline-secondary'>Получить распечатку</button>
+						:
+						''
+						}
 					</div>
 					<div className='col-sm-12 col-md-4 TestDuration mb-3'>
 						<span><i className="far fa-clock"></i> Длительность: {`${Math.floor(this.state.test_info.duration/60)} ч. ${this.state.test_info.duration%60} мин.`}</span>

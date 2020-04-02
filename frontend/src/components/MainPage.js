@@ -58,6 +58,9 @@ class MainPage extends Component{
 	}
 	SendAnswers(test_id){
 		const endpoint = `/api/test_result`
+		let data_change = JSON.parse(localStorage.getItem(`test_${test_id}_answers`))
+		data_change.user.time_long = parseInt(JSON.parse(localStorage.timers).find((ob)=> ob.test == test_id).duration)
+		localStorage.setItem(`test_${test_id}_answers`,data_change)
 			let options = {
 					method: 'POST',
 					headers: {
@@ -107,6 +110,7 @@ class MainPage extends Component{
 							<Switch>
 								<Route exact path='/site/main' render={()=><TestList isAuth={this.props.isAuth} UpdateToken={this.props.UpdateToken}/>}/>
 								<Route exact path='/site/main/constructor' render={()=><TestConstructor isAuth={this.props.isAuth}/>}/>
+								<Route exact path='/site/main/constructor/:id' render={(match)=><TestConstructor isAuth={this.props.isAuth} match={match}/>}/>
 								<Route exact path='/site/main/:slug' render={ ({match})=><TestFull GetTimers={this.GetTimers} match={match}/> }/>
 							</Switch>	
 							:

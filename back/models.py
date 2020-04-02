@@ -15,6 +15,9 @@ class Test(models.Model):
 	active = models.BooleanField(default = False,null = False, blank = False)
 	slug = models.SlugField(allow_unicode = True, null = True, blank = True)
 	duration = models.DecimalField(max_digits = 5, decimal_places = 0)
+	class Meta:
+		verbose_name = 'Тест'
+		verbose_name_plural = 'Тесты'
 	def __str__(self):
 		return(f'{self.test_name}')
 
@@ -39,6 +42,8 @@ class RightAnswer(models.Model):
 class Test_result(models.Model):
 	completed = models.BooleanField()
 	result = models.DecimalField(max_digits = 5, decimal_places = 2, null = False, blank = False)
+	duration = models.DecimalField(max_digits = 7, decimal_places = 2, null = False, blank = False)
+	data_stop = models.DateTimeField(auto_now = False)
 	test = models.ForeignKey(Test, on_delete = models.CASCADE, null = False, blank = False)
 	user = models.ForeignKey(User, on_delete = models.CASCADE, null = False, blank = False)
 	def __str__(self):

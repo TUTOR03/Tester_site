@@ -10,5 +10,7 @@ urlpatterns=[
 	path('tests/<slug>',views.TestSingleAPIview, name = 'TestSingle'),
 	path('timer',views.TestTimerAPIview, name = 'TestTimer'),
 	path('test_result', views.GetTestResultAPIview, name = 'GetTestResult'),
-	path('timer/create', views.CreateTestTimerAPIview, name = 'CreateTestTimer')
+	path('timer/create', views.CreateTestTimerAPIview, name = 'CreateTestTimer'),
+	path('test/create',views.CreateTestAPIview, name = 'CreateTest'),
+	path('results/<idx>',views.GetExelPageAPIview, name = 'GetExelPage')
 ]

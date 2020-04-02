@@ -6,6 +6,7 @@ class RegisterPage extends Component{
 		super(props)
 		this.FormChange = this.FormChange.bind(this)
 		this.MakeRegister = this.MakeRegister.bind(this)
+		this.FinishRegister = this.FinishRegister.bind(this)
 		this.state={
 			username: '',
 			password: '',
@@ -13,7 +14,9 @@ class RegisterPage extends Component{
 			last_name: '',
 			email: '',
 			errors: false,
-			loading: false
+			loading: false,
+			got_data: false,
+			finished: false
 		}
 	}
 	MakeRegister(event){
@@ -22,8 +25,6 @@ class RegisterPage extends Component{
 			this.setState({loading: true})
 			const endpoint = '/api/register'
 			let formdata = new FormData()
-			formdata.append('username',this.state.username)
-			formdata.append('password',this.state.password)
 			formdata.append('first_name',this.state.first_name)
 			formdata.append('last_name',this.state.last_name)
 			formdata.append('email',this.state.email)
@@ -36,12 +37,11 @@ class RegisterPage extends Component{
 				if(respone.ok && this.state.first_name!='' && this.state.last_name!='' && this.state.email!=''){
 					respone.json()
 					.then(responeData => {
-						localStorage.setItem('token',responeData.token)
-						localStorage.setItem('user_id',responeData.user_id)
-						localStorage.setItem('first_name',responeData.first_name)
-						localStorage.setItem('last_name',responeData.last_name)
-						localStorage.setItem('is_admin',responeData.is_admin)
-						this.props.UpdateToken()
+						this.setState({
+							username: responeData.username,
+							password: responeData.password,
+							got_data: true,
+						})
 					})
 					.catch(error => console.log('ERROR',error))
 				}
@@ -51,6 +51,10 @@ class RegisterPage extends Component{
 				}
 			})
 		}
+	}
+	FinishRegister(event){
+		event.preventDefault()
+		this.setState({finished: true})
 	}
 	FormChange(event){
 		event.preventDefault()
@@ -67,14 +71,29 @@ class RegisterPage extends Component{
 			last_name: '',
 			email: '',
 			errors: false,
-			loading: false
+			loading: false,
+			got_data: false,
+			finished: false
 		})
 	}
 	render(){
 		return(
-			this.props.isAuth ? (<Redirect to='/site/main'/>):(
+			this.props.isAuth || this.state.finished ? (<Redirect to='/site/main'/>):(
 				<div className='container-fluid' id='RegisterFormCol'>
-					<div className='row'>
+					{this.state.got_data?
+					<div className='row RegisterFinish FormShadow'>
+						<div className='col-sm-10 mb-3'>
+							<h3>Логин: {this.state.username}</h3>
+						</div>
+						<div className='col-sm-10 mb-3'>
+							<h3>Пароль: {this.state.password}</h3>
+						</div>
+						<div className='col-sm-10'>
+							<button onClick={this.FinishRegister} className='btn btn-outline-success btn-lg btn-block' type='button'>Заершить регистрацию</button>
+						</div>
+					</div>
+					 :
+					 <div className='row'>
 						<div className='col-md-7 col-sm-12 text-center mx-auto rounded FormShadow'>
 							<h1 className='mb-4'>Регистрация</h1>
 							<form onSubmit={this.MakeRegister}>
@@ -91,18 +110,6 @@ class RegisterPage extends Component{
     								</div>
 								</div>
 								<div className='form-row'>
-									<div className="form-group col-md-6 col-sm-12">
-      									<label htmlFor="UsernameRegisterInput">Логин</label>
-      									<input type='username' name='username' onChange={this.FormChange} value={this.state.username} className={`form-control ${this.state.errors ? 'is-invalid':''}`} id="UsernameRegisterInput" placeholder="Логин*"/>
-    									<div className="invalid-feedback">Неверный Логин или Логин отсутствует</div>
-    								</div>
-									<div className="form-group col-md-6 col-sm-12">
-      									<label htmlFor="PasswordRegisterInput">Пароль</label>
-      									<input type='password' name='password' onChange={this.FormChange} value={this.state.password} className={`form-control ${this.state.errors ? 'is-invalid':''}`} id="PasswordRegisterInput" placeholder="Пароль*"/>
-    									<div className="invalid-feedback">Неверный Пароль или Пароль отсутствует</div>
-    								</div>
-								</div>
-								<div className='form-row'>
 									<div className="form-group col-md-10 col-sm-12 mx-auto">
       									<label htmlFor="EmailRegisterInput">Почта</label>
       									<input type='email' name='email' onChange={this.FormChange} value={this.state.email} className={`form-control ${this.state.errors ? 'is-invalid':''}`} id="EmailRegisterInput" placeholder="Почта*"/>
@@ -113,6 +120,7 @@ class RegisterPage extends Component{
 							</form>
 						</div>
 					</div>
+					}
 				</div>
 			)
 		);

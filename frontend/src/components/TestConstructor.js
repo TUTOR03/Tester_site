@@ -11,6 +11,7 @@ class TestConstructor extends Component{
 		this.InputChange = this.InputChange.bind(this)
 		this.InputCheckChange = this.InputCheckChange.bind(this)
 		this.DelPositions = this.DelPositions.bind(this)
+		this.CreateTest = this.CreateTest.bind(this)
 		this.state = {
 			test_title:'',
 			test_description:'',
@@ -76,9 +77,49 @@ class TestConstructor extends Component{
 		q_data[parseInt(data_type[1])].q_answers[parseInt(data_type[2])].a_right = !q_data[parseInt(data_type[1])].q_answers[parseInt(data_type[2])].a_right
 		this.setState({questions:q_data})
 	}
+	// GetTestToEdit(){
+	// 	const endpoint = '/api/test/create/'
+	// 		let options = {
+	// 			method: 'GET',
+	// 			headers: {
+	// 					'Content-type':'application/json',
+	// 					'Authorization': `Token ${localStorage.token}`
+	// 			},
+	// 			body: JSON.stringify({test_id: this.props.match.params})
+	// 		}
+	// 		fetch(endpoint, options)
+	// 		.then(respone => respone.json())
+	// 		.then(responeData =>{
+	// 			this.setState
+	// 		})
+	// }
+	CreateTest(event){
+		event.preventDefault()
+		const endpoint = '/api/test/create'
+			let options = {
+				method: 'POST',
+				headers: {
+						'Content-type':'application/json',
+						'Authorization': `Token ${localStorage.token}`
+				},
+				body: JSON.stringify(this.state)
+			}
+		fetch(endpoint, options)
+		.then(respone =>{
+			if(respone.ok){
+				console.log(`NEW TEST OK`)
+			}
+		})
+	}
+	// componentDidMount(){
+	// 	if(this.props.match.params.id && localStorage.is_admin == 'true'){
+	// 		this.setState({test_id: this.props.match.params.id})
+
+	// 	}
+	// }
 	render(){
 		return(
-			 localStorage.is_admin=='true' && this.props.isAuth ? 
+			 localStorage.is_admin == 'true' && this.props.isAuth ? 
 			<div className='container mt-4 TestConst bg-light'>
 				<div className='row'>
 					<div className='col-sm-12'>
@@ -92,8 +133,11 @@ class TestConstructor extends Component{
 						</div>
 					</div>
 					{this.state.questions.map((ob,idx)=><TestConstructorQuestion key={idx} iter={idx} data={ob} DelPositions={this.DelPositions} InputCheckChange={this.InputCheckChange} InputChange={this.InputChange} AddAnswer={this.AddAnswer}/>)}
-					<div className='col-sm-12'>
+					<div className='col-sm-12 mb-3'>
 						<button onClick={this.AddQuestion} type="button" className='btn btn-outline-primary btn-lg btn-block'>Добавить вопрос</button>
+					</div>
+					<div className='col-sm-12'>
+						<button onClick={this.CreateTest} type="button" className='btn btn-outline-success btn-lg btn-block'>Сохранить тест</button>
 					</div>
 				</div>
 			</div>
